@@ -53,26 +53,18 @@ const show = {
   },
 }
 
+
 const fire = (event) => {
-  const target = event.target;
-  if (target.classList.length !== 0) return;
   /*
-  Проверяем есть ли у нас в массиве с уже отмеченными клетками поля(labeledCells[]) 
-  номер нажатой клетки и если её нет, то:
-  --Вызываем функцию из объекта show для отображения помеченной клетки
-  --Вызываем метод updateData объекта play с аргументом 'shot' для повышения на один переменной счётчика выстрелов
+  Проверяем если у нашей клетки какой либо класс, если его нет, то на неё ещё не нажимали
+  и мы должны исполнить функции добавления класса клетки и прибавить 1 к счётчику выстрелов
+  */
+  const target = event.target;
+  if (target.classList.length !== 0 || target.tagName !== 'TD') return;
 
-  --Добавляем клетку в помеченный labeledCells[]
-  --Увеличиваем переменную i являющуюся счётчиком следующего индекса labeledCells[]
-  */ 
-  if (labeledCells.indexOf( target ) == -1 ) {  
-    show.miss(target);
-    play.updateData = 'shot';
+  show.miss(target);
+  play.updateData = 'shot';
 
-    labeledCells[i] = target;
-    i++;
-  }
-  
 };
 
 //Основная функция игры

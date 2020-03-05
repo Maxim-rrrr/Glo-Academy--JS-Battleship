@@ -79,6 +79,7 @@ const show = {
   },
 }
 
+let gameCompletionIndicator = false;
 
 const fire = (event) => {
   /*
@@ -86,7 +87,12 @@ const fire = (event) => {
   и мы должны исполнить функции добавления класса клетки и прибавить 1 к счётчику выстрелов
   */
   const target = event.target;
-  if (target.classList.length !== 0 || target.tagName !== 'TD') return; //Прекращает выполнение функции fire если на клетку уже нажимали
+  
+  //Прекращает выполнение функции fire если:
+  //-- на клетку уже нажимали
+  //-- нажатие было не по клетке
+  //-- игра окончена
+  if (target.classList.length !== 0 || target.tagName !== 'TD' || gameCompletionIndicator === true) return; 
 
   show.miss(target);
   play.updateData = 'shot';
@@ -113,6 +119,7 @@ const fire = (event) => {
 
         if (game.shipCount < 1) {
           header.textContent = 'Игра окончена!';
+          gameCompletionIndicator = true;
           
           if (play.shot < play.record || play.record === 0) {
             localStorage.setItem('seaBattleRecord', play.shot)
@@ -134,6 +141,7 @@ const init = () => {
   play.render(); 
 
   again.addEventListener('click', () => {
+    gameCompletionIndicator = false;
     location.reload();
   });
 };

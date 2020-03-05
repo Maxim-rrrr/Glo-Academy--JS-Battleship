@@ -54,17 +54,34 @@ const show = {
 }
 
 //Функция выстрела
+let i = 0;                                      //Счётчик следующего значения массива labeledCells
+let labeledCells = [];                          //Массив с уже отмеченными клетками поля
+
 const fire = (event) => {
   const target = event.target;
-  show.miss(target);
   
-  play.updateData = 'shot';
+  /*
+  Проверяем есть ли у нас в массиве с уже отмеченными клетками поля(labeledCells[]) 
+  номер нажатой клетки и если её нет, то:
+  --Вызываем функцию из объекта show для отображения помеченной клетки
+  --Вызываем метод updateData объекта play с аргументом 'shot' для повышения на один переменной счётчика выстрелов
+
+  --Добавляем клетку в помеченный labeledCells[]
+  --Увеличиваем переменную i являющуюся счётчиком следующего индекса labeledCells[]
+  */ 
+  if (labeledCells.indexOf( target ) == -1 ) {  
+    show.miss(target);
+    play.updateData = 'shot';
+
+    labeledCells[i] = target;
+    i++;
+  }
+  
 };
 
 //Основная функция игры
 const init = () => {
-  enemy.addEventListener('click', fire);        //Отслеживание нажатия на поле игры 
-  
+  enemy.addEventListener('click', fire);        //Отслеживание нажатия на поле игры  
 };
 
 init()

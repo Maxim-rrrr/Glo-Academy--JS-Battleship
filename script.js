@@ -53,13 +53,9 @@ const show = {
   },
 }
 
-//Функция выстрела
-let i = 0;                                      //Счётчик следующего значения массива labeledCells
-let labeledCells = [];                          //Массив с уже отмеченными клетками поля
-
 const fire = (event) => {
   const target = event.target;
-  
+  if (target.classList.length !== 0) return;
   /*
   Проверяем есть ли у нас в массиве с уже отмеченными клетками поля(labeledCells[]) 
   номер нажатой клетки и если её нет, то:

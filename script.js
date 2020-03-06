@@ -144,6 +144,11 @@ const init = () => {
     gameCompletionIndicator = false;
     location.reload();
   });
+  record.addEventListener('dblclick', () => {
+    play.record = 0;
+    play.render();
+
+  });
 };
 
 init()

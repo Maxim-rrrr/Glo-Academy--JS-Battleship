@@ -14,26 +14,90 @@ const again = document.getElementById('again');
 
 //
 const game = {
-  ships: [
-    {
-      location: ['26', '36', '46', '56'],   //Месторасположение коробля
-      hit: ['', '', '', '']                 //Потбитые ячейки 
-    },
-    {
-      location: ['11', '12', '13'],         //Месторасположение коробля
-      hit: ['', '', '']                     //Потбитые ячейки 
-    },
-    {
-      location: ['69', '79'],               //Месторасположение коробля
-      hit: ['', '']                         //Потбитые ячейки 
-    },
-    {
-      location: ['32'],                     //Месторасположение коробля
-      hit: ['']                             //Потбитые ячейки 
+  ships: [],  
+  shipCount: 0,                             //кол-во кораблей 
+  optionShip: {
+    count: [1, 2, 3, 4],
+    size: [4, 3, 2, 1]
+  },
+  collision: new Set(),
+  generateShip() {
+    for (let i = 0; i < this.optionShip.count.length; i++) {
+      for (let j = 0; j < this.optionShip.count[i]; j++) {
+        const size = this.optionShip.size[i];
+        const ship = this.generateOptionShip(size);
+        this.ships.push(ship);
+        this.shipCount++;
+      }
     }
-  ],
-  
-  shipCount: 4,                             //кол-во кораблей   
+  },
+
+  generateOptionShip(shipSize){
+    const ship = {
+      hit: [],
+      location: [],
+    };
+
+    const directon = Math.random() < 0.5;
+    let x, y;
+
+    if (directon) {
+      x = Math.floor(Math.random() * 10);
+      y = Math.floor(Math.random() * (10 - shipSize));
+    } else {
+      x = Math.floor(Math.random() * (10 - shipSize));
+      y = Math.floor(Math.random() * 10);
+    }
+
+    for (let i = 0; i < shipSize; i++) {
+      if (directon) {
+        ship.location.push(x + '' + (y + i))
+      } else {
+        ship.location.push((x + i) + '' + y)
+      }
+      ship.hit.push('');
+    }
+
+    if (this.checkCollision(ship.location)){
+      return this.generateOptionShip(shipSize)
+    }
+
+    this.addCollision(ship.location);
+
+    return ship;
+  },
+  checkCollision(location) {
+    for (const coord of location){
+      if  (this.collision.has(coord)){
+        return true;
+      }
+
+    }
+
+  },
+  addCollision(location){
+    for (let i = 0; i < location.length; i++) {
+      const startCoordX = location[i][0] - 1;
+
+      for (let j = startCoordX; j < startCoordX + 3; j++) {
+        const startCoordY = location[i][1] - 1;
+
+        for (let z = startCoordY; z < startCoordY + 3; z++) {
+          if (j >= 0 && j < 10 && z >= 0 && z < 10) {
+            const coord = j + '' + z;
+            
+            this.collision.add(coord);
+
+          }
+
+        }
+
+      }
+
+    }
+
+  },
+
 };
 
 //Объект со всеми игровыми значениями
@@ -140,14 +204,16 @@ const init = () => {
   enemy.addEventListener('click', fire);        //Отслеживание нажатия на поле игры 
   play.render(); 
 
+  game.generateShip();
+
   again.addEventListener('click', () => {
     gameCompletionIndicator = false;
     location.reload();
   });
   record.addEventListener('dblclick', () => {
+    localStorage.clear();
     play.record = 0;
     play.render();
-
   });
 };
 

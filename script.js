@@ -79,7 +79,6 @@ const show = {
   },
 }
 
-let gameCompletionIndicator = false;
 
 const fire = (event) => {
   /*
@@ -91,9 +90,11 @@ const fire = (event) => {
   //Прекращает выполнение функции fire если:
   //-- на клетку уже нажимали
   //-- нажатие было не по клетке
-  //-- игра окончена
-  if (target.classList.length !== 0 || target.tagName !== 'TD' || gameCompletionIndicator === true) return; 
-
+  //-- кораблей не осталось
+  if (target.classList.length !== 0 || 
+      target.tagName !== 'TD' || 
+      !game.shipCount) return; 
+  
   show.miss(target);
   play.updateData = 'shot';
 
@@ -117,10 +118,9 @@ const fire = (event) => {
 
         game.shipCount -= 1;
 
-        if (game.shipCount < 1) {
+        if (!game.shipCount) {
           header.textContent = 'Игра окончена!';
-          gameCompletionIndicator = true;
-          
+
           if (play.shot < play.record || play.record === 0) {
             localStorage.setItem('seaBattleRecord', play.shot)
             play.record = play.shot;

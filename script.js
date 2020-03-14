@@ -12,15 +12,19 @@ const enemy = document.getElementById('enemy');
 //Кнопка 'Начать заново'
 const again = document.getElementById('again');
 
-//
+//Функция генерации кораблей
 const game = {
   ships: [],  
-  shipCount: 0,                             //кол-во кораблей 
+  shipCount: 0, //кол-во кораблей 
   optionShip: {
-    count: [1, 2, 3, 4],
-    size: [4, 3, 2, 1]
+    count:  [1, 2, 3, 4],  //кол-во кораблей определённого размера
+    size:   [4, 3, 2, 1]   //размеры кораблей
   },
+
+  //Сеттер со всёми клетками безопасной зоны
   collision: new Set(),
+
+  //Функция генирации кораблей
   generateShip() {
     for (let i = 0; i < this.optionShip.count.length; i++) {
       for (let j = 0; j < this.optionShip.count[i]; j++) {
@@ -32,6 +36,7 @@ const game = {
     }
   },
 
+  //Создание кораблей и расчёт безопасной зоны вокруг них
   generateOptionShip(shipSize){
     const ship = {
       hit: [],
@@ -66,6 +71,8 @@ const game = {
 
     return ship;
   },
+
+  //функция отдающая true если корабль не попадает не в одну из клеток безопасной зоны
   checkCollision(location) {
     for (const coord of location){
       if  (this.collision.has(coord)){
@@ -75,6 +82,8 @@ const game = {
     }
 
   },
+
+  //функция добавления безопасной зоны в общий сеттер
   addCollision(location){
     for (let i = 0; i < location.length; i++) {
       const startCoordX = location[i][0] - 1;
@@ -143,7 +152,7 @@ const show = {
   },
 }
 
-
+//Функция выстрела
 const fire = (event) => {
   /*
   Проверяем если у нашей клетки какой либо класс, если его нет, то на неё ещё не нажимали
